@@ -8,7 +8,7 @@ function getPreferredTheme() {
 }
 
 function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.dataset.theme = theme;
     localStorage.setItem('skillpulse-theme', theme);
     const btn = document.getElementById('theme-toggle');
     if (btn) btn.textContent = theme === 'dark' ? '\u2600\uFE0F' : '\uD83C\uDF19';
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleBtn = document.getElementById('theme-toggle');
     if (toggleBtn) {
         toggleBtn.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme');
+            const current = document.documentElement.dataset.theme;
             applyTheme(current === 'dark' ? 'light' : 'dark');
         });
     }
@@ -194,7 +194,7 @@ addSkillForm.addEventListener('submit', async (e) => {
         await createSkill({
             name: document.getElementById('skill-name').value,
             category: document.getElementById('skill-category').value,
-            target_hours: parseInt(document.getElementById('skill-target').value) || 0,
+            target_hours: Number.parseInt(document.getElementById('skill-target').value) || 0,
         });
         closeAddModal();
         showToast('Skill added!', 'success');
@@ -209,7 +209,7 @@ logSessionForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     try {
         await logSession(currentLogSkillId, {
-            hours: parseFloat(document.getElementById('log-hours').value),
+            hours: Number.parseFloat(document.getElementById('log-hours').value),
             notes: document.getElementById('log-notes').value,
             log_date: document.getElementById('log-date').value,
         });

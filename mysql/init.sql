@@ -23,11 +23,11 @@ CREATE TABLE IF NOT EXISTS learning_logs (
 
 -- Seed data for demo
 INSERT INTO skills (name, category, target_hours) VALUES
-    ('Docker', 'DevOps', 40),
-    ('Kubernetes', 'DevOps', 60),
+    ('Docker', current_setting('custom.cat_devops'), 40),
+    ('Kubernetes', current_setting('custom.cat_devops'), 60),
     ('Go', 'Programming', 50),
     ('Azure DevOps', 'Cloud', 30),
-    ('Terraform', 'DevOps', 35);
+    ('Terraform', current_setting('custom.cat_devops'), 35);
 
 INSERT INTO learning_logs (skill_id, hours, notes, log_date) VALUES
     (1, 2.0, 'Learned Docker basics - images, containers, volumes', '2026-03-10'),
