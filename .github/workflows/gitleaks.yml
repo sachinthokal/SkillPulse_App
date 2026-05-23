@@ -1,4 +1,4 @@
-name: Code Analysis
+name: Gitleaks Scan
 on:
   workflow_call:
     secrets:
