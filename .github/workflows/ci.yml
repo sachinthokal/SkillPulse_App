@@ -1,14 +1,8 @@
 name: CI
 
 on:
-  workflow_call:
-    inputs:
-      DOCKERHUB_USERNAME:
-        required: true
-        type: string
-    secrets:
-      DOCKERHUB_TOKEN:
-        required: true 
+  push:
+    branches: [main]
 
 jobs:
   build-and-push:

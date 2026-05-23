@@ -1,19 +1,10 @@
 name: CD
 
 on:
-  workflow_call:
-    inputs:
-      EC2_HOST:
-        required: true
-        type: string
-      EC2_USER:
-        required: true
-        type: string
-    secrets:
-      EC2_SSH_KEY:
-        required: true
-      ENV_FILE:
-        required: true
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
 
 jobs:
   deploy:
@@ -33,7 +24,7 @@ jobs:
             git pull origin main
         
             echo '${{ secrets.ENV_FILE }}' > .env
-
+            
             docker compose pull
             docker compose up -d
             docker image prune -f
