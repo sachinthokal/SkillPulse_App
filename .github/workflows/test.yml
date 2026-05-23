@@ -65,6 +65,8 @@ jobs:
       fail-fast: false
       matrix: 
         os: [ubuntu-latest, windows-latest]
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
     steps:
       - name: Checkout code
@@ -81,13 +83,13 @@ jobs:
 
       - name: Start Backend Container
         run: |
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-backend:latest
-          docker run -d --name skillpulse-backend-test --network skillpulse-test-net ${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-backend:latest
+          docker pull $DOCKERHUB_USERNAME/skillpulse-backend:latest
+          docker run -d --name skillpulse-backend-test --network skillpulse-test-net $DOCKERHUB_USERNAME/skillpulse-backend:latest
 
       - name: Test Connection via Curl
         run: |
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-frontend:latest
-          docker run --rm --network skillpulse-test-net ${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-frontend:latest curl -i http://skillpulse-backend-test:8080/health
+          docker pull $DOCKERHUB_USERNAME/skillpulse-frontend:latest
+          docker run --rm --network skillpulse-test-net $DOCKERHUB_USERNAME/skillpulse-frontend:latest curl -i http://skillpulse-backend-test:8080/health
 
       - name: Cleanup Containers
         if: always()
