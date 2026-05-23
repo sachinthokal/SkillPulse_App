@@ -28,8 +28,7 @@ jobs:
       - name: Publish SonarCloud Report to UI
         if: always() # Ensure this step runs even if the previous one fails
         run: |
-          echo "### [View SonarCloud Dashboard](https://sonarcloud.io/dashboard?id=sachinthokal_SkillPulse_App&branch=main)" >> $GITHUB_STEP_SUMMARY
-          echo "### 🚀 SonarCloud Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "## [View SonarCloud Dashboard](https://sonarcloud.io/dashboard?id=sachinthokal_SkillPulse_App&branch=main)" >> $GITHUB_STEP_SUMMARY
 
   gitleaks:
     name: Gitleaks Scan
