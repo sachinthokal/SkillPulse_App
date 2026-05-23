@@ -14,9 +14,10 @@ jobs:
             uses: SonarSource/sonarqube-scan-action@v6
             env:
               SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Your authentication token
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             with:
-              args: 
-                  -Dsonar.organization=sachinthokal
-                  -Dsonar.projectKey=SkillPulse_App 
-                  -Dsonar.sources=.
-                  -Dsonar.qualitygate.wait=true
+              args: >
+                -Dsonar.organization=sachinthokal
+                -Dsonar.projectKey=SkillPulse_App
+                -Dsonar.sources=.
+                -Dsonar.qualitygate.wait=true
