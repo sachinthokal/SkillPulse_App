@@ -12,7 +12,7 @@ jobs:
     # 1. CODE STAGE - Reusable workflow for code quality and security checks
     code_stage:
         name: Code Quality and Security Checks
-        uses: ./.github/workflows/code-stage.yml
+        uses: sachinthokal/SkillPulse_App/.github/workflows/code-stage.yml@main
         with:
             sonar_project_key: "skillpulse-app" # sonar_project_key for SonarQube analysis
         secrets:
@@ -23,7 +23,7 @@ jobs:
     build_stage:
         name: Build and Push Docker Images
         needs: code_stage
-        uses: ./.github/workflows/ci.yml
+        uses: sachinthokal/SkillPulse_App/.github/workflows/ci.yml@main
         with:
             DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         secrets:
@@ -42,7 +42,7 @@ jobs:
     deploy_stage:
         name: Deploy to EC2
         needs: test_stage
-        uses: ./.github/workflows/cd.yml
+        uses: sachinthokal/SkillPulse_App/.github/workflows/cd.yml@main
         with:
             EC2_HOST: ${{ secrets.EC2_HOST }}
             EC2_USER: ${{ secrets.EC2_USER }}
