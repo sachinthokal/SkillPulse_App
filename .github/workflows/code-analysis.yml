@@ -25,13 +25,13 @@ jobs:
             -Dsonar.sources=.
             -Dsonar.qualitygate.wait=true
 
-      - name: Publish SonarCloud Report Link to UI
+      - name: Publish SonarCloud Report to UI
         if: always() # Ensure this step runs even if the previous one fails
         run: |
-          echo "### 🚀 SonarCloud Analysis Report" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "[View SonarCloud Dashboard](https://sonarcloud.io/dashboard?id=sachinthokal_SkillPulse_App&branch=main)" >> $GITHUB_STEP_SUMMARY
+          echo "### [View SonarCloud Dashboard](https://sonarcloud.io/dashboard?id=sachinthokal_SkillPulse_App&branch=main)" >> $GITHUB_STEP_SUMMARY
+          echo "### 🚀 SonarCloud Scan Results" >> $GITHUB_STEP_SUMMARY
 
+          
   gitleaks:
     name: Gitleaks Scan
     runs-on: ubuntu-latest
@@ -45,3 +45,4 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
