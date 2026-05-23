@@ -10,13 +10,13 @@ jobs:
   code-analysis:
     name: Code Analysis
     uses: sachinthokal/SkillPulse_App/.github/workflows/code-analysis.yml@main
-    with:
+    secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   code-build-and-push:
     name: Build and Push Docker Images
     needs: code-analysis
     uses: sachinthokal/SkillPulse_App/.github/workflows/ci.yml@main
-    with:
+    secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
