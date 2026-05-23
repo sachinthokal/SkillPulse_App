@@ -73,13 +73,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+        # MacOS
       - name: Setup Docker on macOS (Colima)
         if: matrix.os == 'macos-latest'
         run: |
-          brew install docker colima
+          brew install docker colima docker-compose
           colima start --cpu 2 --memory 4
           echo "DOCKER_HOST=unix://$HOME/.colima/default/docker.sock" >> $GITHUB_ENV
 
+        # Windows
       - name: Start Docker Daemon (Windows Only)
         if: matrix.os == 'windows-latest'
         run: |
@@ -92,25 +94,31 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Create Test Network
-        run: docker network create skillpulse-test-net
-
-      - name: Start Backend Container
+      - name: Start Environment via Docker Compose
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          MYSQL_ROOT_PASSWORD: root
+          DB_NAME: skillpulse
+          DB_USER: root
+          DB_PASSWORD: root
         run: |
-          docker pull $DOCKERHUB_USERNAME/skillpulse-backend:latest
-          docker run -d --name skillpulse-backend-test --network skillpulse-test-net $DOCKERHUB_USERNAME/skillpulse-backend:latest
+          docker compose up -d --wait
 
-      - name: Wait for Backend to be Ready
+      - name: Check Container Status if Failed
+        if: failure()
         run: |
-          ${{ matrix.os == 'windows-latest' && 'timeout /t 5 /nobreak' || 'sleep 5' }}
+          docker compose ps
+          docker compose logs backend
+          docker compose logs db
 
       - name: Test Connection via Curl
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
-          docker pull $DOCKERHUB_USERNAME/skillpulse-frontend:latest
-          docker run --rm --network skillpulse-test-net $DOCKERHUB_USERNAME/skillpulse-frontend:latest curl -i http://skillpulse-backend-test:8080/health
+          docker run --rm \
+            --network ${{ github.event.repository.name }}_default \
+            $DOCKERHUB_USERNAME/skillpulse-frontend:latest curl -i http://backend:8080/health
 
-      - name: Cleanup Containers
+      - name: Cleanup Environment
         if: always()
-        run: |
-          docker rm -f skillpulse-backend-test || true
-          docker network rm skillpulse-test-net || true
+        run: docker compose down -v
