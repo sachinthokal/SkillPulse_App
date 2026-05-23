@@ -30,3 +30,4 @@ jobs:
         run: |
           echo "### [View SonarCloud Dashboard](https://sonarcloud.io/dashboard?id=sachinthokal_SkillPulse_App&branch=main)" >> $GITHUB_STEP_SUMMARY
           echo "### 🚀 SonarCloud Scan Results" >> $GITHUB_STEP_SUMMARY
+
