@@ -1,5 +1,4 @@
-name: CI
-
+name: SKILLPULSE CI
 on:
   workflow_call:
     secrets:

@@ -1,4 +1,4 @@
-name: Main DevSecOps Pipeline
+name: SKILLPULSE DevSecOps Pipeline
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: CD
+name: SKILLPULSE CD
 
 on:
   workflow_call:

@@ -1,4 +1,4 @@
-name: Code Analysis
+name: SKILLPULSE SAST
 on:
   workflow_call:
     secrets:

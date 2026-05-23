@@ -1,4 +1,4 @@
-name: SKILLPULSE TEST
+name: SKILLPULSE DAST
 
 on:
   workflow_call:
