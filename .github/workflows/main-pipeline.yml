@@ -21,9 +21,18 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
+
+  test-stage:
+    name: TEST
+    needs: build-stage
+    uses: sachinthokal/SkillPulse_App/.github/workflows/test.yml@main 
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+    
+
   deploy-stage:
     name: DEPLOY
-    needs: build-stage
+    needs: test-stage
     uses: sachinthokal/SkillPulse_App/.github/workflows/cd.yml@main
     secrets:
       EC2_HOST: ${{ secrets.EC2_HOST }}
