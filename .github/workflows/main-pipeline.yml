@@ -1,0 +1,17 @@
+name: Main DevSecOps Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  code-analysis:
+    name: Code Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Code Analysis
+        uses: ./.github/workflows/code-analysis.yml
+        with:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
