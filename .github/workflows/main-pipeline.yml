@@ -7,15 +7,15 @@ on:
     branches: [ main ]
 
 jobs:
-  code-analysis:
-    name: Code Analysis
+  code-stage:
+    name: CODE STAGE
     uses: sachinthokal/SkillPulse_App/.github/workflows/code-analysis.yml@main
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  code-build-and-push:
-    name: Build and Push Docker Images
-    needs: code-analysis
+  build-stage:
+    name: BUILD STAGE
+    needs: code-stage
     uses: sachinthokal/SkillPulse_App/.github/workflows/ci.yml@main
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
