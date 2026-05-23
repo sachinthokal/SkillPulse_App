@@ -11,12 +11,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
           - name: SonarCloud Scan
-            uses: SonarSource/sonarqube-scan-action@v5
+            uses: SonarSource/sonarqube-scan-action@v6
             env:
               SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Your authentication token
             with:
               args: 
                   -Dsonar.organization=sachinthokal
                   -Dsonar.projectKey=SkillPulse
-                  -Dsonar.sources=src/
+                  -Dsonar.sources=.
                   -Dsonar.qualitygate.wait=true
