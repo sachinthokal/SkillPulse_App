@@ -21,6 +21,6 @@ jobs:
             with:
               args: >
                 -Dsonar.organization=sachinthokal
-                -Dsonar.projectKey=SkillPulse_App
+                -Dsonar.projectKey=sachinthokal_SkillPulse_App
                 -Dsonar.sources=.
                 -Dsonar.qualitygate.wait=true
