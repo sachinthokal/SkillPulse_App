@@ -22,10 +22,9 @@ jobs:
             fi
             cd ~/skillpulse
             git pull origin main
-            if [ ! -f .env ]; then
-              echo "ERROR: ~/skillpulse/.env is missing. Create it once with DOCKERHUB_USERNAME and DB credentials."
-              exit 1
-            fi
+        
+            echo '${{ secrets.ENV_FILE }}' > .env
+            
             docker compose pull
             docker compose up -d
             docker image prune -f
