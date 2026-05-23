@@ -7,7 +7,7 @@ on:
 
 jobs:
   sonarcloud-scan:
-    name: SONARCLOUD SCAN
+    name: SonarCloud Scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -26,7 +26,7 @@ jobs:
             -Dsonar.qualitygate.wait=true
 
   gitleaks:
-    name: GITLEAKS SCAN
+    name: Gitleaks Scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code

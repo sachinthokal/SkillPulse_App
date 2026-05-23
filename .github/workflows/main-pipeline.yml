@@ -8,13 +8,13 @@ on:
 
 jobs:
   code-stage:
-    name: CODE STAGE
+    name: CODE
     uses: sachinthokal/SkillPulse_App/.github/workflows/code-analysis.yml@main
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build-stage:
-    name: BUILD STAGE
+    name: BUILD
     needs: code-stage
     uses: sachinthokal/SkillPulse_App/.github/workflows/ci.yml@main
     secrets:
@@ -22,7 +22,7 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
   deploy-stage:
-    name: DEPLOY STAGE
+    name: DEPLOY
     needs: build-stage
     uses: sachinthokal/SkillPulse_App/.github/workflows/cd.yml@main
     secrets:

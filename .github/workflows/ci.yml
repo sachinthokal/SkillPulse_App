@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-push:
-    name: BUILD AND PUSH TO DOCKERHUB
+    name: Build and Push
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
