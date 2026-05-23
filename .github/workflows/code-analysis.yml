@@ -31,3 +31,16 @@ jobs:
           echo "### [View SonarCloud Dashboard](https://sonarcloud.io/dashboard?id=sachinthokal_SkillPulse_App&branch=main)" >> $GITHUB_STEP_SUMMARY
           echo "### 🚀 SonarCloud Scan Results" >> $GITHUB_STEP_SUMMARY
 
+  gitleaks:
+    name: Gitleaks Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks Action
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

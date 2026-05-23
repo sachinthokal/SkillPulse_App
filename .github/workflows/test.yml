@@ -42,15 +42,18 @@ jobs:
 
       - name: Publish Trivy Scan Results to UI
         if: always() # Ensure this step runs even if the previous ones fail
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  
         run: |
           echo "### 🚀 Trivy Scan Results - Backend Image" >> $GITHUB_STEP_SUMMARY
-          echo "#### Image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-backend:latest" >> $GITHUB_STEP_SUMMARY
+          echo "#### Image: docker.io/$DOCKERHUB_USERNAME/skillpulse-backend:latest" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          trivy image --format table --severity CRITICAL,HIGH docker.io/${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-backend:latest || true
+          trivy image --format table --severity CRITICAL,HIGH docker.io/$DOCKERHUB_USERNAME/skillpulse-backend:latest || true
           echo '```' >> $GITHUB_STEP_SUMMARY
 
           echo "### 🚀 Trivy Scan Results - Frontend Image" >> $GITHUB_STEP_SUMMARY
-          echo "#### Image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-frontend:latest" >> $GITHUB_STEP_SUMMARY
+          echo "#### Image: docker.io/$DOCKERHUB_USERNAME/skillpulse-frontend:latest" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          trivy image --format table --severity CRITICAL,HIGH docker.io/${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-frontend:latest || true
+          trivy image --format table --severity CRITICAL,HIGH docker.io/$DOCKERHUB_USERNAME/skillpulse-frontend:latest || true
           echo '```' >> $GITHUB_STEP_SUMMARY
