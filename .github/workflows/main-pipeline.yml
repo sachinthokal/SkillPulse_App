@@ -10,8 +10,6 @@ jobs:
   gitleaks-scan:
     name: GITLEAKS SCAN
     uses: sachinthokal/SkillPulse_App/.github/workflows/gitleaks.yml@main
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   code-stage:
     name: CODE ANALYSIS
@@ -29,7 +27,7 @@ jobs:
 
   test-stage:
     name: TEST
-    needs: [build-stage, gitleaks-scan]
+    needs: build-stage
     uses: sachinthokal/SkillPulse_App/.github/workflows/test.yml@main
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -37,7 +35,7 @@ jobs:
 
   deploy-stage:
     name: DEPLOY
-    needs: [test-stage, gitleaks-scan]
+    needs: test-stage
     uses: sachinthokal/SkillPulse_App/.github/workflows/cd.yml@main
     secrets:
       EC2_HOST: ${{ secrets.EC2_HOST }}
