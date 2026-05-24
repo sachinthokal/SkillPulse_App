@@ -1,7 +1,7 @@
 name: "Delete Terraform KinD Cluster"
 
 on:
-  workflow_call:
+  workflow_dispatch:
 
 jobs:
   terraform:
