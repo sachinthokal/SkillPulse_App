@@ -16,8 +16,7 @@ jobs:
         
          cd Terraform/local-kind-cluster
          if kind get clusters | grep -q "^terraform-east-cluster$"; then
-            echo "Cluster exists, Importing..."
-            terraform import kind_cluster.default terraform-east-cluster
+            echo "Cluster exists, Skipping..."
           else
             echo "Cluster does not exist, proceeding..."
             echo "Initializing Terraform..."
