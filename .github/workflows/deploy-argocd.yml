@@ -8,40 +8,39 @@ jobs:
     name: "Non-Prod-ArgoCD"
     runs-on: self-hosted
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-      - name: Install ArgoCD & Substitute Variables
-        env:
-          ENV_REPO_URL: ${{ github.server_url }}/${{ github.repository }}.git
-          YML_PATH: "k8s"
-        run: |
+    - name: Install ArgoCD & Substitute Variables
+      env:
+        ENV_REPO_URL: ${{ github.server_url }}/${{ github.repository }}.git
+        YML_PATH: "k8s"
+      run: |
+  
+        kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
 
-          kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+        echo "Installing ArgoCD core manifests safely..."
+        kubectl apply -n argocd --server-side=true --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
+        
+        echo "Waiting for ArgoCD deployments to be fully ready..."
+        kubectl rollout status deployment/argocd-server -n argocd --timeout=120s
+        kubectl rollout status deployment/argocd-repo-server -n argocd --timeout=120s
 
-          echo "Installing ArgoCD core manifests safely..."
-          kubectl create -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml || \
-          kubectl replace -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+        
+        echo "Patching ArgoCD Service to NodePort..."
+        kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort", "ports": [{"name": "http", "port": 80, "nodePort": 30085, "protocol": "TCP", "targetPort": 8080}]}}'  
+        
+        kubectl get svc -n argocd
+        ls -la argocd/
 
+       
+        envsubst < argocd/root-application.yaml > argocd/root-application-final.yaml
+        
+        echo "=== Final ArgoCD Root Application YAML ==="
+        cat argocd/root-application-final.yaml
 
-          echo "Waiting for ArgoCD deployments to be fully ready..."
-          kubectl rollout status deployment/argocd-server -n argocd --timeout=120s
-          kubectl rollout status deployment/argocd-repo-server -n argocd --timeout=120s
-
-
-          echo "Patching ArgoCD Service to NodePort..."
-          kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort", "ports": [{"name": "http", "port": 80, "nodePort": 30085, "protocol": "TCP", "targetPort": 8080}]}}'  
-
-          kubectl get svc -n argocd
-          ls -la argocd/
-
-
-          envsubst < argocd/root-application.yaml > argocd/root-application-final.yaml
-
-          echo "=== Final ArgoCD Root Application YAML ==="
-          cat argocd/root-application-final.yaml
-
-      - name: Apply ArgoCD Root Application
-        run: |
-          kubectl apply -f argocd/root-application-final.yaml
+    - name: Apply ArgoCD Root Application
+      run: |
+        
+        kubectl apply -f argocd/root-application-final.yaml
