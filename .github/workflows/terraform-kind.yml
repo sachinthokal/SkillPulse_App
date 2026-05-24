@@ -16,7 +16,7 @@ jobs:
           cd Terraform/local-kind-cluster
           echo "${{ secrets.TFVARS_CONTENT }}" > terraform.tfvars
 
-      - name: Terraform Kind Cluster Deployment
+      - name: Terraform Kind Cluster Check
         run: |
           if kind get clusters | grep -q "^terraform-east-cluster$"; then
             echo "Cluster exists, deleting..."
@@ -25,6 +25,10 @@ jobs:
 
           echo "Cluster does not exist, proceeding..."
           
+      - name: Deploy to KinD Cluster using Terraform  
+        run: |
+          cd Terraform/local-kind-cluster
+
           terraform init
           terraform plan -var-file="terraform.tfvars"
           terraform apply -var-file="terraform.tfvars" -auto-approve
