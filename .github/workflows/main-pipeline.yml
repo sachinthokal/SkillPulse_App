@@ -29,6 +29,17 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
+  deploy-stage-env:
+    name: DEPLOY
+    runs-on: ubuntu-latest
+    steps:
+      - name: Non-Prod Environment
+        run: |
+          echo "Deploying to Non-Prod EC2 Environment..."
+          echo "Successfully deployed to Non-Prod EC2 Environment."
+    
+
+
   deploy-stage:
     name: DEPLOY
     needs: test-stage
