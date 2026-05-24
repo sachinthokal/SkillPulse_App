@@ -16,6 +16,7 @@ jobs:
           echo "Current working directory: $(pwd)"
           cd Terraform/local-kind-cluster
           ls -la
+          terraform --version
 
       - name: Terraform Init
         run: terraform init
