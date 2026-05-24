@@ -29,7 +29,6 @@ jobs:
           echo "$TFVARS_CONTENT" > terraform.tfvars
           ls -la
           cat terraform.tfvars
-          cat $TFVARS_CONTENT
 
           terraform init
           terraform plan
