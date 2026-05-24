@@ -14,5 +14,6 @@ jobs:
       - name: Build Infra with Terraform
         run: |
         
-         cd Terraform
+         cd Terraform/local-kind-cluster
+         echo "Initializing Terraform..."
          pwd
