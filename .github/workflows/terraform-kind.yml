@@ -15,11 +15,16 @@ jobs:
         run: |
         
          cd Terraform/local-kind-cluster
-         echo "Initializing Terraform..."
-          terraform init >> $GITHUB_STEP_SUMMARY
-          terraform plan >> $GITHUB_STEP_SUMMARY
-          terraform apply -auto-approve >> $GITHUB_STEP_SUMMARY
-          
+         if kind get clusters | grep -q "^terraform-east-cluster$"; then
+            echo "Cluster exists, Importing..."
+            terraform import kind_cluster.default terraform-east-cluster
+          else
+            echo "Cluster does not exist, proceeding..."
+            echo "Initializing Terraform..."
+            terraform init >> $GITHUB_STEP_SUMMARY
+            terraform plan >> $GITHUB_STEP_SUMMARY
+            terraform apply -auto-approve >> $GITHUB_STEP_SUMMARY
+          fi
       
       - name: Publish Terraform Output to UI
         if: always() # Ensure this step runs even if the previous ones fail
