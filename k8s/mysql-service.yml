@@ -1,0 +1,15 @@
+# mysql-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  labels:
+    app: mysql-database
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  clusterIP: None  # Headless service required for StatefulSet network identity
+  selector:
+    app: mysql-database

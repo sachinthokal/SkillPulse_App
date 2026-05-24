@@ -1,0 +1,24 @@
+name: SKILLPULSE ArgoCD
+
+on:
+  workflow_call:
+
+jobs:
+  argo-deploy:
+    runs-on: self-hosted
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Substitute Variables Dynamically
+      env:
+        ENV_REPO_URL: ${{ github.server_url }}/${{ github.repository }}.git
+        YML_PATH: "k8s"
+      run: |
+        envsubst < argocd/root-application.yaml > argocd/root-application-final.yaml
+        echo "=== Final ArgoCD Root Application YAML ==="
+        cat argocd/root-application-final.yaml
+
+    - name: Apply ArgoCD Root Application
+      run: |
+        kubectl apply -f argocd/root-application-final.yaml

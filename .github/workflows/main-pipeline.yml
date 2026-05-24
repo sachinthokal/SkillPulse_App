@@ -51,9 +51,7 @@ jobs:
     if: github.event_name != 'workflow_dispatch'
     name: DEPLOY / Non-Prod
     needs: build-infra
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Deploying..."
+    uses: sachinthokal/SkillPulse_App/.github/workflows/deploy-argocd.yml@main
 
   deploy-prod:
     if: github.event_name != 'workflow_dispatch'
@@ -69,6 +67,7 @@ jobs:
   infra-clean:
     if: github.event_name == 'workflow_dispatch'
     name: Delete Non-Prod Infra
+    needs: build-infra
     runs-on: self-hosted
 
     steps:
@@ -85,5 +84,5 @@ jobs:
           else
             echo "Cluster does not exist, Exited..."
           fi
-
+          
           echo "Successfully Deleted KinD cluster using Terraform."

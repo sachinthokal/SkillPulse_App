@@ -1,0 +1,77 @@
+# mysql-statefulset
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-statefulset
+spec:
+  serviceName: "mysql-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-database
+  template:
+    metadata:
+      labels:
+        app: mysql-database
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+              name: mysql
+
+          # 1. Load all plain variables (DB_HOST, DB_USER, DB_NAME) from ConfigMap
+          envFrom:
+            - configMapRef:
+                name: mysql-db-env
+
+          # 2. Map passwords from Secret to specific environment names
+          env:
+            # Required by MySQL official image to set the internal root password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: root-password
+
+            # Required by Custom User
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-db-env
+                  key: DB_USER # skillpulse
+
+            # Required by Custom User password
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: db-password
+
+            # Required by your Go Backend code (getEnv("DB_PASSWORD")) to connect successfully
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: db-password
+
+          volumeMounts:
+            - name: mysql-storage
+              mountPath: /var/lib/mysql
+
+            - name: init-script-volume
+              mountPath: /docker-entrypoint-initdb.d
+
+      volumes:
+        - name: mysql-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+
+        - name: init-script-volume
+          configMap:
+            name: mysql-init-config
+            items:
+              - key: init.sql
+                path: init.sql

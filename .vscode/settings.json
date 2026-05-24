@@ -1,12 +1,26 @@
 {
     "cSpell.words": [
         "DOCKERHUB",
+        "finalizer",
         "gitleaks",
+        "initdb",
         "SKILLPULSE",
         "sonarcloud",
         "sonarqube",
         "tfvars",
-        "TFVARS"
+        "TFVARS",
+        "Varibale",
+        "अंतर्गत",
+        "अनिवार्य",
+        "असतो",
+        "कंटेनरला",
+        "करण्यासाठी",
+        "झाली",
+        "प्रक्रियेसाठी",
+        "ब्लॉक",
+        "सीक्रेट्स",
+        "स्वतंत्र",
+        "होती"
     ],
     "cSpell.ignoreWords": []
 }

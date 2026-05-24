@@ -1,4 +1,4 @@
-name: "Create Terraform KinD Cluster"
+name: "SKILLPULSE Terraform KinD Cluster"
 
 on:
   workflow_call:
