@@ -12,5 +12,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Infra with Terraform
-        run: cd Terraform/
-          pwd
+        run: |
+        
+         cd Terraform
+         pwd
