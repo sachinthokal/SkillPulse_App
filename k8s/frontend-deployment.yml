@@ -6,7 +6,6 @@ metadata:
   labels:
     app: frontend
 spec:
-  automountServiceAccountToken: false
   replicas: 1
   selector:
     matchLabels:
@@ -16,6 +15,7 @@ spec:
       labels:
         app: frontend
     spec:
+      automountServiceAccountToken: false
       containers:
       - name: frontend
         image: sachinthokal/skillpulse-frontend:latest

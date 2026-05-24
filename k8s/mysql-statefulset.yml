@@ -5,7 +5,6 @@ kind: StatefulSet
 metadata:
   name: mysql-statefulset
 spec:
-  automountServiceAccountToken: false
   serviceName: "mysql-service"
   replicas: 1
   selector:
@@ -16,6 +15,7 @@ spec:
       labels:
         app: mysql-database
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: mysql
           image: mysql:8.0
