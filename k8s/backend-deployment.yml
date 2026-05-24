@@ -12,11 +12,21 @@ spec:
       labels:
         app: backend
     spec:
+      automountServiceAccountToken: false
       containers:
       - name: backend-app
         image: sachinthokal/skillpulse-backend:latest
         ports:
         - containerPort: 8080
+
+        # --- Resources Block ---
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "512m"
 
         env:
         - name: DB_HOST

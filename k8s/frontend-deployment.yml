@@ -6,6 +6,7 @@ metadata:
   labels:
     app: frontend
 spec:
+  automountServiceAccountToken: false
   replicas: 1
   selector:
     matchLabels:
@@ -20,6 +21,15 @@ spec:
         image: sachinthokal/skillpulse-frontend:latest
         ports:
         - containerPort: 80
+
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "512m"
+
         env:
         - name: BACKEND_URL
           value: "http://backend-service:8080"
