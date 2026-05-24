@@ -11,25 +11,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Build Infra with Terraform
+      - name: Working Directory
         run: |
-        
-         cd Terraform/local-kind-cluster
-         if kind get clusters | grep -q "^terraform-east-cluster$"; then
-            echo "Cluster exists, Skipping..."
-          else
-            echo "Cluster does not exist, proceeding..."
-            echo "Initializing Terraform..."
-            terraform init >> $GITHUB_STEP_SUMMARY
-            terraform plan >> $GITHUB_STEP_SUMMARY
-            terraform apply -auto-approve >> $GITHUB_STEP_SUMMARY
-          fi
-      
-      - name: Publish Terraform Output to UI
-        if: always() # Ensure this step runs even if the previous ones fail
-        run: |
-          echo "### 🚀 Terraform Output - Local KinD Cluster" >> $GITHUB_STEP_SUMMARY
-          echo '```text' >> $GITHUB_STEP_SUMMARY
-          cd Terraform/local-kind-cluster
-          terraform output >> $GITHUB_STEP_SUMMARY || true
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "Current working directory: $(pwd)"
+          ls -la
