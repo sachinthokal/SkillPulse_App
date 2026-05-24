@@ -14,8 +14,8 @@ jobs:
       - name: Working Directory
         run: |
           echo "Current working directory: $(pwd)"
-          cd Terraform
+          cd Terraform/local-kind-cluster
           ls -la
-          
+
       - name: Terraform Init
         run: terraform init
