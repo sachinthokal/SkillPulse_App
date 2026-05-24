@@ -62,4 +62,4 @@ jobs:
 
   infra-clean:
     name: DELETE NON PROD INFRA
-    uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-kind-cluster-up.yml@main
+    uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-kind-cluster-down.yml@main
