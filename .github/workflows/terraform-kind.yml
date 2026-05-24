@@ -23,10 +23,12 @@ jobs:
       - name: Deploy to KinD Cluster using Terraform  
         run: |
           cd Terraform/local-kind-cluster
-          
+
           echo "${{ vars.TFVARS_CONTENT }}" > terraform.tfvars
           echo " " > terraform.tfvars
-
+        
+      - name: Check Terraform Files and Deploy  
+        run: |
           ls -la
           cat terraform.tfvars
 
