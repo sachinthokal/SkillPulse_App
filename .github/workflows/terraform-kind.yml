@@ -11,15 +11,39 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Working Directory
+      - name: Create tfvars file
+        run: |
+          cd Terraform/local-kind-cluster
+          echo "${{ secrets.TFVARS_CONTENT }}" > terraform.tfvars
+
+      - name: Terraform Kind Cluster Deployment
         run: |
           echo "Current working directory: $(pwd)"
           cd Terraform/local-kind-cluster
-          ls -la
+          
+          rm -f .terraform.lock.hcl
+          
+          terraform init -upgrade
           terraform --version
-          terraform init
-          terraform plan
-          terraform apply -auto-approve
+
+          if kind get clusters | grep -q "^terraform-east-cluster$"; then
+            echo "Cluster exists, importing into terraform state to sync..."
+            
+            terraform state rm kind_cluster.default || true
+            terraform import -var-file="terraform.tfvars" kind_cluster.default terraform-east-cluster
+            
+            echo "Sync complete. Running plan/apply to ensure configuration matches..."
+          else
+            echo "Cluster does not exist, proceeding with fresh creation..."
+          fi
+
+          terraform plan -var-file="terraform.tfvars"
+          terraform apply -var-file="terraform.tfvars" -auto-approve
+          
           terraform output -json > terraform_output.json
+          echo "### Terraform Output" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
           cat terraform_output.json >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          
           echo "Successfully deployed KinD cluster using Terraform."
