@@ -27,7 +27,7 @@ jobs:
   build-infra:
     name: BUILD
     needs: test-stage
-    uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-kind.yml@main
+    uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-kind-cluster-up.yml@main
 
   test-stage:
     name: TEST
@@ -50,7 +50,6 @@ jobs:
           # kubectl apply -f k8s/deployment.yaml
           echo "Deployment to KinD cluster completed."
 
-
   deploy-prod:
     name: DEPLOY
     needs: deploy-stage
@@ -60,3 +59,7 @@ jobs:
       EC2_USER: ${{ secrets.EC2_USER }}
       EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
       ENV_FILE: ${{ secrets.ENV_FILE }}
+
+  infra-clean:
+    name: DELETE NON PROD INFRA
+    uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-kind-cluster-up.yml@main

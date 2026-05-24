@@ -1,10 +1,7 @@
-name: "Terraform KinD on Local Machine"
-
-# on:
-#   workflow_dispatch: 
+name: "Create Terraform KinD Cluster"
 
 on:
-  workflow_call:
+  workflow_dispatch: 
 
 jobs:
   terraform:
@@ -28,7 +25,7 @@ jobs:
           
       - name: Deploy to KinD Cluster using Terraform  
         run: |
-          cd Terraform/local-kind-cluster
+          cd ~/Sachin_Workspace/projects/SkillPulse_App/Terraform/local-kind-cluster/
           echo "$TFVARS_CONTENT" > terraform.tfvars
           ls -la
           cat terraform.tfvars
