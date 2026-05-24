@@ -1,14 +1,11 @@
 name: SKILLPULSE DevSecOps Pipeline
 
-# on:
-#   push:
-#     branches: [main]
-#   pull_request:
-#     branches: [main]
-
 on:
-  workflow_dispatch:
-    
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
 jobs:
   code-stage:
     name: CODE
