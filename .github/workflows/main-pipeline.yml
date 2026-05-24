@@ -30,7 +30,7 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
   deploy-stage:
-    name: DEPLOY
+    name: DEPLOY - Non-Prod Environment
     runs-on: ubuntu-latest
     needs: test-stage
     steps:
