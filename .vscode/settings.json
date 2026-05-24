@@ -4,7 +4,9 @@
         "gitleaks",
         "SKILLPULSE",
         "sonarcloud",
-        "sonarqube"
+        "sonarqube",
+        "tfvars",
+        "TFVARS"
     ],
     "cSpell.ignoreWords": []
 }

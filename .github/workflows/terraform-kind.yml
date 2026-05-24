@@ -25,6 +25,7 @@ jobs:
           cd Terraform/local-kind-cluster
           echo "${{ vars.TFVARS_CONTENT }}" > terraform.tfvars
           ls -la
+          cat terraform.tfvars
 
           terraform init
           terraform plan
