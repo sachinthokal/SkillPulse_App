@@ -27,7 +27,7 @@ jobs:
   build-infra:
     name: BUILD
     needs: test-stage
-    uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-kind-cluster-up.yml@main
+    uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-kind-cluster.yml@main
 
   test-stage:
     name: TEST
@@ -61,5 +61,19 @@ jobs:
       ENV_FILE: ${{ secrets.ENV_FILE }}
 
   infra-clean:
-    name: DELETE NON PROD INFRA
-    uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-kind-cluster-down.yml@main
+    name: "Delete Non-Prod Infra"
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Terraform Kind Cluster Check
+        run: |
+          cd ~/Sachin_Workspace/projects/SkillPulse_App/Terraform/local-kind-cluster/
+          if kind get clusters | grep -q "^terraform-east-cluster$"; then
+            echo "Cluster exists, deleting..."
+            terraform destroy
+          fi
+          echo "Cluster does not exist, Exited..."          
+          echo "Successfully Deleted KinD cluster using Terraform."
