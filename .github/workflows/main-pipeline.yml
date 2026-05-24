@@ -49,7 +49,7 @@ jobs:
 
   deploy-stage:
     if: github.event_name != 'workflow_dispatch'
-    name: DEPLOY / Non-Prod
+    name: DEPLOY
     needs: build-infra
     uses: sachinthokal/SkillPulse_App/.github/workflows/deploy-argocd.yml@main
 

@@ -5,6 +5,7 @@ on:
 
 jobs:
   argo-deploy:
+    name: Non-Prod-ArgoCD
     runs-on: self-hosted
     steps:
     - name: Checkout Code
