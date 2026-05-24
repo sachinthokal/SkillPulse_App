@@ -1,7 +1,8 @@
 name: "Create Terraform KinD Cluster"
 
 on:
-  workflow_dispatch: 
+  workflow_call:
+   
 
 jobs:
   terraform:
