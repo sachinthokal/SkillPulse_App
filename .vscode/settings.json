@@ -1,12 +1,15 @@
 {
     "cSpell.words": [
         "DOCKERHUB",
+        "envsubst",
         "finalizer",
         "gitleaks",
         "initdb",
+        "Sachin",
         "SKILLPULSE",
         "sonarcloud",
         "sonarqube",
+        "tfstate",
         "tfvars",
         "TFVARS",
         "Varibale",

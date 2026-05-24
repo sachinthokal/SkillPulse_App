@@ -2,7 +2,6 @@ name: "SKILLPULSE Terraform KinD Cluster"
 
 on:
   workflow_call:
-   
 
 jobs:
   terraform:
@@ -15,14 +14,22 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Terraform Kind Cluster Check
+      - name: Terraform Kind Cluster & State Check
         run: |
+          cd ~/Sachin_Workspace/projects/SkillPulse_App/Terraform/local-kind-cluster/
+          
           if kind get clusters | grep -q "^terraform-east-cluster$"; then
-            echo "Cluster exists, deleting..."
+            echo "KinD Cluster exists in Docker, deleting..."
             kind delete cluster --name terraform-east-cluster
           fi
 
-          echo "Cluster does not exist, proceeding..."
+          if [ -f "terraform.tfstate" ]; then
+            echo "Syncing Terraform state..."
+            terraform init
+            terraform state rm kind_cluster.default || echo "State already clear"
+          fi
+
+          echo "Cluster and state are clean, proceeding..."
           
       - name: Deploy to KinD Cluster using Terraform  
         run: |

@@ -1,11 +1,11 @@
-name: SKILLPULSE ArgoCD
+name: "SKILLPULSE ArgoCD"
 
 on:
   workflow_call:
 
 jobs:
   argo-deploy:
-    name: Non-Prod-ArgoCD
+    name: "Non-Prod-ArgoCD"
     runs-on: self-hosted
     steps:
     - name: Checkout Code
@@ -16,7 +16,10 @@ jobs:
         ENV_REPO_URL: ${{ github.server_url }}/${{ github.repository }}.git
         YML_PATH: "k8s"
       run: |
+        ls -la argocd/
+
         envsubst < argocd/root-application.yaml > argocd/root-application-final.yaml
+        
         echo "=== Final ArgoCD Root Application YAML ==="
         cat argocd/root-application-final.yaml
 
