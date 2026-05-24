@@ -38,17 +38,18 @@ jobs:
 
     - name: Apply MySQL Secret Safely
       env:
-        MYSQL_SECRET_DATA: ${{ secrets.MYSQL_CONF }}
+        ROOT_PASS: ${{ secrets.ROOT_PASS }}
+        DB_PASS: ${{ secrets.DB_PASS }}
       run: |
         cat <<EOF > mysql-secret.yml
         apiVersion: v1
         kind: Secret
         metadata:
           name: mysql-secret
-          namespace: default
         type: Opaque
-        stringData:
-          db-password: "$MYSQL_SECRET_DATA"
+        data:
+          root-password: "$ROOT_PASS"
+          db-password: "$DB_PASS"
         EOF
 
         echo "Applying MySQL Secret..."
