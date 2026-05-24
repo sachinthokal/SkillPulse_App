@@ -7,6 +7,9 @@ jobs:
   terraform:
     name: "Non-Prod Infra"
     runs-on: self-hosted
+    env:
+      TFVARS_CONTENT: ${{ vars.TFVARS_CONTENT }}
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -23,16 +26,10 @@ jobs:
       - name: Deploy to KinD Cluster using Terraform  
         run: |
           cd Terraform/local-kind-cluster
-
-          echo "${{ vars.TFVARS_CONTENT }}" > terraform.tfvars
-          echo " " > terraform.tfvars
-        
-      - name: Check Terraform Files and Deploy  
-        run: |
-
-          cd Terraform/local-kind-cluster
+          echo "$TFVARS_CONTENT" > terraform.tfvars
           ls -la
           cat terraform.tfvars
+          cat $TFVARS_CONTENT
 
           terraform init
           terraform plan
