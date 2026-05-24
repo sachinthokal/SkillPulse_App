@@ -1,0 +1,25 @@
+name: "Terraform KinD on Local Machine"
+
+on:
+  workflow_call:
+
+jobs:
+  terraform:
+    name: "Local Infra Deploy"
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Create tfvars file from GitHub Secret
+        run: |
+          echo "${{ secrets.TFVARS_CONTENT }}" > terraform.tfvars
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -var-file="terraform.tfvars"
+
+      - name: Terraform Apply
+        run: terraform apply -var-file="terraform.tfvars" -auto-approve
