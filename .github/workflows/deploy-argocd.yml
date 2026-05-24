@@ -42,5 +42,4 @@ jobs:
 
     - name: Apply ArgoCD Root Application
       run: |
-        
         kubectl apply -f argocd/root-application-final.yaml
