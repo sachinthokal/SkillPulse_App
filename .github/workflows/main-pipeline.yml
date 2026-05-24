@@ -21,6 +21,10 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
+  build-infra:
+    name: BUILD
+    uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-kind.yml@main
+
   test-stage:
     name: TEST
     needs: build-stage

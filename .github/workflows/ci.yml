@@ -38,10 +38,3 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-frontend:${{ github.sha }}
             ${{ secrets.DOCKERHUB_USERNAME }}/skillpulse-frontend:latest
-
-  build-infra:
-    name: Build Non-Prod Infra
-    runs-on: self-hosted
-    steps:
-      - name: Terraform Kind Cluster Deployment
-        uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-kind.yml@main
