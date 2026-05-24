@@ -14,7 +14,7 @@ jobs:
       - name: Create tfvars file
         run: |
           cd Terraform/local-kind-cluster
-          echo "${{ secrets.TFVARS_CONTENT }}" > terraform.tfvars
+          ls -la
 
       - name: Terraform Kind Cluster Check
         run: |
@@ -28,6 +28,7 @@ jobs:
       - name: Deploy to KinD Cluster using Terraform  
         run: |
           cd Terraform/local-kind-cluster
+          echo "${{ secrets.TFVARS_CONTENT }}" > terraform.tfvars
 
           terraform init
           terraform plan -var-file="terraform.tfvars"
