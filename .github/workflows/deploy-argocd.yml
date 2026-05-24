@@ -11,11 +11,24 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Substitute Variables Dynamically
+    - name: Install ArgoCD & Substitute Variables
       env:
         ENV_REPO_URL: ${{ github.server_url }}/${{ github.repository }}.git
         YML_PATH: "k8s"
       run: |
+        kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+
+        echo "Installing ArgoCD core manifests..."
+        kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+        echo "Waiting for ArgoCD deployments to be fully ready..."
+        kubectl rollout status deployment/argocd-server -n argocd --timeout=120s
+        kubectl rollout status deployment/argocd-repo-server -n argocd --timeout=120s
+
+        echo "Patching ArgoCD Service to NodePort..."
+        kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort", "ports": [{"name": "http", "port": 80, "nodePort": 30085, "protocol": "TCP", "targetPort": 8080}]}}'  
+        
+        kubectl get svc -n argocd
         ls -la argocd/
 
         envsubst < argocd/root-application.yaml > argocd/root-application-final.yaml

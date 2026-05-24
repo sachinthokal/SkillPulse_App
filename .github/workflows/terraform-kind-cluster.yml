@@ -5,7 +5,7 @@ on:
 
 jobs:
   terraform:
-    name: "Non-Prod Infra"
+    name: "Terraform-Stage-Infra"
     runs-on: self-hosted
     env:
       TFVARS_CONTENT: ${{ vars.TFVARS_CONTENT }}

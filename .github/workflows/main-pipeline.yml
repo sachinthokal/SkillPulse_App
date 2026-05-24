@@ -43,7 +43,7 @@ jobs:
 
   build-infra:
     if: github.event_name != 'workflow_dispatch'
-    name: BUILD-INFRA
+    name: BUILD
     needs: test-stage
     uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-kind-cluster.yml@main
 
