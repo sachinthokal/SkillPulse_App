@@ -24,8 +24,8 @@ jobs:
 
         
         echo "Waiting for ArgoCD deployments to be fully ready..."
-        kubectl rollout status deployment/argocd-server -n argocd --timeout=120s
-        kubectl rollout status deployment/argocd-repo-server -n argocd --timeout=120s
+        kubectl rollout status deployment/argocd-server -n argocd --timeout=300s || (kubectl get pods -n argocd && exit 1)
+        kubectl rollout status deployment/argocd-repo-server -n argocd --timeout=300s || (kubectl get pods -n argocd && exit 1)
 
         
         echo "Patching ArgoCD Service to NodePort..."
