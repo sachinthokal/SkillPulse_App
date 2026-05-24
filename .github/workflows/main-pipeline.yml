@@ -3,20 +3,28 @@ name: SKILLPULSE DevSecOps Pipeline
 on:
   push:
     branches: [main]
+
   pull_request:
     branches: [main]
 
-# on:
-#   workflow_dispatch:
+  workflow_dispatch:
+    inputs:
+      cleanup:
+        description: "Run Infra Cleanup Job"
+        required: true
+        default: "false"
 
 jobs:
+
   code-stage:
+    if: github.event_name != 'workflow_dispatch'
     name: CODE
     uses: sachinthokal/SkillPulse_App/.github/workflows/code-analysis.yml@main
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build-stage:
+    if: github.event_name != 'workflow_dispatch'
     name: BUILD
     needs: code-stage
     uses: sachinthokal/SkillPulse_App/.github/workflows/ci.yml@main
@@ -24,12 +32,8 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
-  build-infra:
-    name: BUILD
-    needs: test-stage
-    uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-kind-cluster.yml@main
-
   test-stage:
+    if: github.event_name != 'workflow_dispatch'
     name: TEST
     needs: build-stage
     uses: sachinthokal/SkillPulse_App/.github/workflows/test.yml@main
@@ -37,20 +41,22 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
+  build-infra:
+    if: github.event_name != 'workflow_dispatch'
+    name: BUILD-INFRA
+    needs: test-stage
+    uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-kind-cluster.yml@main
+
   deploy-stage:
+    if: github.event_name != 'workflow_dispatch'
     name: DEPLOY / Non-Prod
     needs: build-infra
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to KinD Cluster
-        run: |
-          echo "Deploying to KinD cluster..."
-          # Here you would add the actual deployment commands, e.g., using kubectl or helm
-          # For example:
-          # kubectl apply -f k8s/deployment.yaml
-          echo "Deployment to KinD cluster completed."
+      - run: echo "Deploying..."
 
   deploy-prod:
+    if: github.event_name != 'workflow_dispatch'
     name: DEPLOY
     needs: deploy-stage
     uses: sachinthokal/SkillPulse_App/.github/workflows/cd.yml@main
@@ -61,7 +67,8 @@ jobs:
       ENV_FILE: ${{ secrets.ENV_FILE }}
 
   infra-clean:
-    name: "Delete Non-Prod Infra"
+    if: github.event_name == 'workflow_dispatch'
+    name: Delete Non-Prod Infra
     runs-on: self-hosted
 
     steps:
@@ -71,9 +78,12 @@ jobs:
       - name: Terraform Kind Cluster Check
         run: |
           cd ~/Sachin_Workspace/projects/SkillPulse_App/Terraform/local-kind-cluster/
+
           if kind get clusters | grep -q "^terraform-east-cluster$"; then
             echo "Cluster exists, deleting..."
-            terraform destroy
+            terraform destroy -auto-approve
+          else
+            echo "Cluster does not exist, Exited..."
           fi
-          echo "Cluster does not exist, Exited..."          
+
           echo "Successfully Deleted KinD cluster using Terraform."
