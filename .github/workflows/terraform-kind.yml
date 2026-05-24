@@ -8,7 +8,7 @@ jobs:
     name: "Non-Prod Infra"
     runs-on: self-hosted
     env:
-      TFVARS_CONTENT: ${{ secrets.TFVARS_CONTENT }}
+      TFVARS_CONTENT: ${{ vars.TFVARS_CONTENT }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
