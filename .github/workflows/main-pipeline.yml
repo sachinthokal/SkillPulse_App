@@ -39,7 +39,7 @@ jobs:
 
   deploy-stage:
     name: DEPLOY / Non-Prod
-    needs: test-stage
+    needs: build-infra
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to KinD Cluster
