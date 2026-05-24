@@ -29,6 +29,8 @@ jobs:
         
       - name: Check Terraform Files and Deploy  
         run: |
+
+          cd Terraform/local-kind-cluster
           ls -la
           cat terraform.tfvars
 
