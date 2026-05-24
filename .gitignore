@@ -43,4 +43,6 @@ terraform.rc
 # Uncomment the line below if you want to ignore planout files.
 # planout
 
+# Ignore environment variable files, which may contain sensitive information such as API keys, credentials, and other secrets. These should not be part of version control.
 .env
+!.env.example
