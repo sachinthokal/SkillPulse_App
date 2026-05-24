@@ -16,7 +16,16 @@ jobs:
         
          cd Terraform/local-kind-cluster
          echo "Initializing Terraform..."
-          terraform init
-          terraform plan
-          terraform apply -auto-approve
-         pwd
+          terraform init >> $GITHUB_STEP_SUMMARY
+          terraform plan >> $GITHUB_STEP_SUMMARY
+          terraform apply -auto-approve >> $GITHUB_STEP_SUMMARY
+          
+      
+      - name: Publish Terraform Output to UI
+        if: always() # Ensure this step runs even if the previous ones fail
+        run: |
+          echo "### 🚀 Terraform Output - Local KinD Cluster" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          cd Terraform/local-kind-cluster
+          terraform output >> $GITHUB_STEP_SUMMARY || true
+          echo '```' >> $GITHUB_STEP_SUMMARY
