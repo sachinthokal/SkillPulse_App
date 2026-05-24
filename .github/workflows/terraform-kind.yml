@@ -16,4 +16,7 @@ jobs:
         
          cd Terraform/local-kind-cluster
          echo "Initializing Terraform..."
+          terraform init
+          terraform plan -tfvar-file=terraform.tfvars
+          terraform apply -auto-approve -tfvar-file=terraform.tfvars
          pwd
