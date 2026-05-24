@@ -24,7 +24,7 @@ jobs:
         run: |
           cd Terraform/local-kind-cluster
           echo "${{ vars.TFVARS_CONTENT }}" > terraform.tfvars
-          echo "\n" > terraform.tfvars
+          echo " " > terraform.tfvars
           ls -la
           cat terraform.tfvars
 
