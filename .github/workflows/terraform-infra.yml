@@ -29,9 +29,5 @@ jobs:
             exit $exit_code
           fi
 
-      - name: Terraform Apply
-        if: steps.plan.outputs.changes_present == 'true'
-        run: terraform apply --auto-approve
-
-      - name: Terraform Output
-        run: terraform output >> $GITHUB_STEP_SUMMARY
+          terraform apply --auto-approve
+          terraform output >> $GITHUB_STEP_SUMMARY
