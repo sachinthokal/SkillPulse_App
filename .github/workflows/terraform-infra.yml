@@ -11,12 +11,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # STEP 1: Run Terraform Plan
       - name: Terraform Plan
         id: plan
         working-directory: ./Terraform
         run: |
+
+          ls -la
+          pwd
           terraform init
-          terraform plan -detailed-exitcode || exit_code=$?
+          terraform plan -detailed-exitcode -out=tfplan || exit_code=$?
           echo "exit_code=$exit_code"
           
           if [ "$exit_code" -eq 0 ]; then
@@ -29,5 +33,12 @@ jobs:
             exit $exit_code
           fi
 
-          terraform apply --auto-approve
+          ls -la
+          pwd
+
+      - name: Terraform Apply
+        if: steps.plan.outputs.changes_present == 'true'
+        working-directory: ./Terraform
+        run: |
+          terraform apply -auto-approve tfplan 
           terraform output >> $GITHUB_STEP_SUMMARY
