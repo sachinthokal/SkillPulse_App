@@ -21,6 +21,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
+        working-directory: ./Terraform
         run: |
           terraform plan -detailed-exitcode -out=tfplan || exit_code=$?
           echo "exit_code=$exit_code"
