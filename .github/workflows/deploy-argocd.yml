@@ -6,53 +6,10 @@ on:
 jobs:
   argo-deploy:
     name: "Non-Prod-ArgoCD"
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
 
     - name: Install ArgoCD & Substitute Variable
-      env:
-        ENV_REPO_URL: ${{ github.server_url }}/${{ github.repository }}.git
-        YML_PATH: "k8s"
-      run: |
-        kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
-
-        echo "Installing ArgoCD core manifests safely..."
-        kubectl apply -n argocd --server-side=true --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-
-        echo "Waiting for ArgoCD deployments to be fully ready..."
-        kubectl rollout status deployment/argocd-server -n argocd --timeout=300s || (kubectl get pods -n argocd && exit 1)
-        kubectl rollout status deployment/argocd-repo-server -n argocd --timeout=300s || (kubectl get pods -n argocd && exit 1)
-
-        echo "Patching ArgoCD Service to NodePort..."
-        kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort", "ports": [{"name": "http", "port": 80, "nodePort": 30085, "protocol": "TCP", "targetPort": 8080}]}}'  
-        
-        kubectl get svc -n argocd
-        ls -la argocd/
-
-        envsubst < argocd/root-application.yaml > argocd/root-application-final.yaml
-        
-        echo "=== Final ArgoCD Root Application YAML ==="
-        cat argocd/root-application-final.yaml
-
-    - name: Apply MySQL Secret Safely
-      run: |
-        cat <<EOF > mysql-secret.yml
-        apiVersion: v1
-        kind: Secret
-        metadata:
-          name: mysql-secret
-        type: Opaque
-        data:
-          root-password: ${{ secrets.ROOT_PASS }}
-          db-password: ${{ secrets.DB_PASS }}
-        EOF
-
-        echo "Applying MySQL Secret..."
-        kubectl apply -f mysql-secret.yml
-
-    - name: Apply ArgoCD Root Application
-      run: |
-        echo "Applying ArgoCD Root Application..."
-        kubectl apply -f argocd/root-application-final.yaml
+      run: echo "Deploy Through ArgoCD"

@@ -1,0 +1,12 @@
+name: "SKILLPULSE Non-Prod EC2"
+
+on:
+  workflow_call:
+
+jobs:
+  terraform:
+    name: "Deployment on Non-Prod"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment
+        run: echo "Deploy on Non Prod Env"

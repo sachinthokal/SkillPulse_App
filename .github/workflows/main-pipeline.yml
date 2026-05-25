@@ -44,7 +44,7 @@ jobs:
     needs: test-stage
     if: github.event_name != 'workflow_dispatch'
     name: BUILD
-    uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-infra.yml@main
+    uses: sachinthokal/SkillPulse_App/.github/workflows/non-prod-infra.yml@main
 
   deploy-stage:
     if: github.event_name != 'workflow_dispatch'
@@ -62,32 +62,3 @@ jobs:
       EC2_USER: ${{ secrets.EC2_USER }}
       EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
       ENV_FILE: ${{ secrets.ENV_FILE }}
-
-  infra-clean:
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.cleanup == 'true'
-    name: Delete Non-Prod Infra
-    runs-on: self-hosted
-    environment: Non Prod Infra Clean
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      # STEP 1: Build
-      - name: Download Terraform State File
-        uses: actions/download-artifact@v4
-        with:
-          name: terraform-state-artifact
-          path: ./Terraform
-
-      # STEP 2: Destroy 
-      - name: Terraform Destroy
-        id: destroy
-        working-directory: ./Terraform
-        run: |
-          echo "=== Initializing Terraform ==="
-          terraform init
-          
-          echo "=== Starting Infrastructure Destruction ==="
-          terraform destroy -auto-approve
-          
-          echo "### 🛑 Non-Prod Infra Deleted Successfully !!" >> $GITHUB_STEP_SUMMARY
