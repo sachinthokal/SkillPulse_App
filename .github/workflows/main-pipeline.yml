@@ -41,6 +41,7 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
   build-infra:
+    needs: test-stage
     if: github.event_name != 'workflow_dispatch'
     name: BUILD
     uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-infra.yml@main
