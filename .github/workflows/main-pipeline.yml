@@ -46,16 +46,10 @@ jobs:
     name: BUILD
     uses: sachinthokal/SkillPulse_App/.github/workflows/non-prod-infra.yml@main
 
-  deploy-stage:
-    if: github.event_name != 'workflow_dispatch'
-    name: DEPLOY
-    needs: build-infra
-    uses: sachinthokal/SkillPulse_App/.github/workflows/deploy-argocd.yml@main
-
   deploy-prod:
     if: github.event_name != 'workflow_dispatch'
     name: DEPLOY
-    needs: deploy-stage
+    needs: build-infra
     uses: sachinthokal/SkillPulse_App/.github/workflows/cd.yml@main
     secrets:
       EC2_HOST: ${{ secrets.EC2_HOST }}

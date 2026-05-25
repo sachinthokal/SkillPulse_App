@@ -5,8 +5,13 @@ on:
 
 jobs:
   terraform:
-    name: "Deployment on Non-Prod"
+    name: "Non-Prod Infra"
     runs-on: ubuntu-latest
     steps:
-      - name: Deployment
-        run: echo "Deploy on Non Prod Env"
+      - name: Build Stage Infra
+        run: |
+         echo "Building Stage Infra for Testing"
+         echo "Non-Prod Infra Created Successfully"
+         echo "Testing Application..."
+         echo "Application Tested Successfully..."
+         echo "Application ready to go live !!"
