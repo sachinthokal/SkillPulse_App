@@ -16,7 +16,7 @@ jobs:
         working-directory: ./Terraform
         run: |
           terraform init
-          terraform plan -detailed-exitcode -out=tfplan || exit_code=$?
+          terraform plan -detailed-exitcode || exit_code=$?
           echo "exit_code=$exit_code"
           
           if [ "$exit_code" -eq 0 ]; then
@@ -31,7 +31,7 @@ jobs:
 
       - name: Terraform Apply
         if: steps.plan.outputs.changes_present == 'true'
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply --auto-approve
 
       - name: Terraform Output
         run: terraform output >> $GITHUB_STEP_SUMMARY
