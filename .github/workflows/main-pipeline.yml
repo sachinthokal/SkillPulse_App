@@ -72,9 +72,22 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Terraform Plan
-        id: plan
+      # STEP 1: Build
+      - name: Download Terraform State File
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-state-artifact
+          path: ./Terraform
+
+      # STEP 2: Destroy 
+      - name: Terraform Destroy
+        id: destroy
         working-directory: ./Terraform
         run: |
-          terraform destroy --auto-approve
-          echo "Non-Prod Infra Deleted !!" >> $GITHUB_STEP_SUMMARY
+          echo "=== Initializing Terraform ==="
+          terraform init
+          
+          echo "=== Starting Infrastructure Destruction ==="
+          terraform destroy -auto-approve
+          
+          echo "### 🛑 Non-Prod Infra Deleted Successfully !!" >> $GITHUB_STEP_SUMMARY

@@ -16,9 +16,10 @@ jobs:
         id: plan
         working-directory: ./Terraform
         run: |
-
+          echo "=== Debug Before Plan ==="
           ls -la
           pwd
+          
           terraform init
           terraform plan -detailed-exitcode -out=tfplan || exit_code=$?
           echo "exit_code=$exit_code"
@@ -33,17 +34,31 @@ jobs:
             exit $exit_code
           fi
 
+          echo "=== Debug After Plan ==="
           ls -la
           pwd
 
+      # STEP 2: Run Terraform Apply (Runs only if changes are detected)
       - name: Terraform Apply
         if: steps.plan.outputs.changes_present == 'true'
         working-directory: ./Terraform
         run: |
-
+          echo "=== Debug Before Apply ==="
           ls -la
           pwd
+          
           terraform apply -auto-approve tfplan 
           terraform output >> $GITHUB_STEP_SUMMARY
+          
+          echo "=== Debug After Apply ==="
           ls -la
           pwd
+
+      # STEP 3: Upload State File to GitHub Artifacts (Always runs after apply)
+      - name: Upload Terraform State File
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-state-artifact
+          path: ./Terraform/terraform.tfstate
+          retention-days: 2
