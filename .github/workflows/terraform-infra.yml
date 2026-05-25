@@ -40,5 +40,10 @@ jobs:
         if: steps.plan.outputs.changes_present == 'true'
         working-directory: ./Terraform
         run: |
+
+          ls -la
+          pwd
           terraform apply -auto-approve tfplan 
           terraform output >> $GITHUB_STEP_SUMMARY
+          ls -la
+          pwd

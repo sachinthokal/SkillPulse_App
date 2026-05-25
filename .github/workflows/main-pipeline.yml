@@ -72,20 +72,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: HashiCorp - Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "1.7.0"
-
-      - name: Terraform Working Directory
-        run: cd Terraform
-
       - name: Terraform Plan
         id: plan
+        working-directory: ./Terraform
         run: |
-          terraform destroy
-
-      - name: Terraform Output
-        run: |
-          terraform output >> $GITHUB_STEP_SUMMARY
+          terraform destroy --auto-approve
           echo "Non-Prod Infra Deleted !!" >> $GITHUB_STEP_SUMMARY
