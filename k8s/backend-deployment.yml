@@ -11,6 +11,7 @@ spec:
     metadata:
       labels:
         app: backend
+        env: Prod
     spec:
       automountServiceAccountToken: false
       containers:
