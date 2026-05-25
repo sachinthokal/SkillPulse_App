@@ -1,0 +1,1 @@
+[![SKILLPULSE DevSecOps Pipeline](https://github.com/sachinthokal/SkillPulse_App/actions/workflows/main-pipeline.yml/badge.svg)](https://github.com/sachinthokal/SkillPulse_App/actions/workflows/main-pipeline.yml)

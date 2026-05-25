@@ -1,0 +1,70 @@
+---
+- name: Install kubectl and Minikube on Ubuntu EC2
+  hosts: all
+  become: yes
+
+  vars:
+    kubectl_version_url: "https://dl.k8s.io/release/stable.txt"
+    minikube_download_url: "https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64"
+
+  tasks:
+
+    - name: Update apt packages
+      apt:
+        update_cache: yes
+        upgrade: yes
+
+    
+    # -----------------------------
+    # kubectl Installation
+    # -----------------------------
+
+    - name: Get latest kubectl version
+      shell: curl -L -s {{ kubectl_version_url }}
+      register: kubectl_version
+
+    - name: Download kubectl
+      get_url:
+        url: "https://dl.k8s.io/release/{{ kubectl_version.stdout }}/bin/linux/amd64/kubectl"
+        dest: /tmp/kubectl
+        mode: '0755'
+
+    - name: Move kubectl binary
+      command: mv /tmp/kubectl /usr/local/bin/kubectl
+      args:
+        creates: /usr/local/bin/kubectl
+
+    # -----------------------------
+    # Minikube Installation
+    # -----------------------------
+
+    - name: Download Minikube
+      get_url:
+        url: "{{ minikube_download_url }}"
+        dest: /tmp/minikube-linux-amd64
+        mode: '0755'
+
+    - name: Install Minikube
+      command: install /tmp/minikube-linux-amd64 /usr/local/bin/minikube
+      args:
+        creates: /usr/local/bin/minikube
+
+    # -----------------------------
+    # Verification
+    # -----------------------------
+
+    - name: Check kubectl version
+      command: kubectl version --client
+      register: kubectl_version_output
+
+    - name: Show kubectl version
+      debug:
+        var: kubectl_version_output.stdout
+
+    - name: Check Minikube version
+      command: minikube version
+      register: minikube_version_output
+
+    - name: Show Minikube version
+      debug:
+        var: minikube_version_output.stdout

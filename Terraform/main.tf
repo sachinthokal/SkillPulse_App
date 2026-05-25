@@ -8,8 +8,8 @@ module "my_aws_server" {
 
   # variables
   aws_region    = "ap-south-1" # Mumbai region
-  instance_type = "t3.micro"
-  instance_name = "SkillPulse-Prod-EC2"
+  instance_type = "c7i-flex.large"
+  instance_name = "SkillPulse-Prod-Server"
   ssh_key       = "~/.ssh/id_rsa.pub"
   ami_id        = "ami-07a00cf47dbbc844c"
 }

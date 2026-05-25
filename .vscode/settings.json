@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "buildx",
         "DOCKERHUB",
         "elif",
         "envsubst",
@@ -7,6 +8,7 @@
         "finalizer",
         "gitleaks",
         "initdb",
+        "keyrings",
         "Sachin",
         "sachinthokal",
         "SKILLPULSE",
