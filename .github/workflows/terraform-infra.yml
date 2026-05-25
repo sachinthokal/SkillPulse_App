@@ -16,13 +16,11 @@ jobs:
         with:
           terraform_version: "1.7.0"
 
-      - name: Terraform Init
-        run: terraform init
-
       - name: Terraform Plan
         id: plan
         working-directory: ./Terraform
         run: |
+          terraform init
           terraform plan -detailed-exitcode -out=tfplan || exit_code=$?
           echo "exit_code=$exit_code"
           
