@@ -1,0 +1,43 @@
+name: "SKILLPULSE Terraform EC2 Cluster"
+
+on:
+  workflow_call:
+
+jobs:
+  terraform:
+    name: "Terraform-Stage-Infra"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+          
+      - name: HashiCorp - Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.0"
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan -detailed-exitcode -out=tfplan || exit_code=$?
+          echo "exit_code=$exit_code"
+          
+          if [ "$exit_code" -eq 0 ]; then
+            echo "changes_present=false" >> $GITHUB_OUTPUT
+            echo "No infrastructure changes detected. Keeping existing setup." >> $GITHUB_STEP_SUMMARY
+          elif [ "$exit_code" -eq 2 ]; then
+            echo "changes_present=true" >> $GITHUB_OUTPUT
+          else
+            echo "Terraform plan failed with error code $exit_code"
+            exit $exit_code
+          fi
+
+      - name: Terraform Apply
+        if: steps.plan.outputs.changes_present == 'true'
+        run: terraform apply -auto-approve tfplan
+
+      - name: Terraform Output
+        run: terraform output >> $GITHUB_STEP_SUMMARY

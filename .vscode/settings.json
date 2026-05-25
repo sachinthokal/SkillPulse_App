@@ -1,7 +1,9 @@
 {
     "cSpell.words": [
         "DOCKERHUB",
+        "elif",
         "envsubst",
+        "exitcode",
         "finalizer",
         "gitleaks",
         "initdb",

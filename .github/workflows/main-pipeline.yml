@@ -15,7 +15,6 @@ on:
         default: "false"
 
 jobs:
-
   code-stage:
     if: github.event_name != 'workflow_dispatch'
     name: CODE
@@ -44,7 +43,6 @@ jobs:
   build-infra:
     if: github.event_name != 'workflow_dispatch'
     name: BUILD
-    needs: test-stage
     uses: sachinthokal/SkillPulse_App/.github/workflows/terraform-kind-cluster.yml@main
 
   deploy-stage:
@@ -65,24 +63,27 @@ jobs:
       ENV_FILE: ${{ secrets.ENV_FILE }}
 
   infra-clean:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.cleanup == 'true'
     name: Delete Non-Prod Infra
-    needs: build-infra
-    runs-on: self-hosted
-
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      - name: Terraform Kind Cluster Check
-        run: |
-          cd ~/Sachin_Workspace/projects/SkillPulse_App/Terraform/local-kind-cluster/
-
-          if kind get clusters | grep -q "^terraform-east-cluster$"; then
-            echo "Cluster exists, deleting..."
-            terraform destroy -auto-approve
-          else
-            echo "Cluster does not exist, Exited..."
-          fi
           
-          echo "Successfully Deleted KinD cluster using Terraform."
+      - name: HashiCorp - Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.0"
+
+      - name: Terraform Working Directory
+        run: cd Terraform
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform destroy
+
+      - name: Terraform Output
+        run: |
+         terraform output >> $GITHUB_STEP_SUMMARY
+         echo "Non-Prod Infra Deleted !!" >> $GITHUB_STEP_SUMMARY
