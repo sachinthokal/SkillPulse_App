@@ -37,9 +37,6 @@ jobs:
         cat argocd/root-application-final.yaml
 
     - name: Apply MySQL Secret Safely
-      env:
-        ROOT_PASS: ${{ secrets.ROOT_PASS }}
-        DB_PASS: ${{ secrets.DB_PASS }}
       run: |
         cat <<EOF > mysql-secret.yml
         apiVersion: v1
@@ -48,8 +45,8 @@ jobs:
           name: mysql-secret
         type: Opaque
         data:
-          root-password: "$ROOT_PASS"
-          db-password: "$DB_PASS"
+          root-password: ${{ secrets.ROOT_PASS }}
+          db-password: ${{ secrets.DB_PASS }}
         EOF
 
         echo "Applying MySQL Secret..."

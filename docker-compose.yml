@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   mysql-service:
     image: mysql:8.4
@@ -18,21 +20,25 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
+    networks:
+      - skillpulse-network
 
   backend-service:
     image: ${DOCKERHUB_USERNAME}/skillpulse-backend:latest
     build: ./backend
     restart: unless-stopped
     environment:
-      DB_HOST: db
+      DB_HOST: mysql-service
       DB_PORT: "3306"
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
       PORT: "8080"
     depends_on:
-      db:
+      mysql-service:
         condition: service_healthy
+    networks:
+      - skillpulse-network
 
   frontend-service:
     image: ${DOCKERHUB_USERNAME}/skillpulse-frontend:latest
@@ -41,7 +47,45 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - backend
+      - backend-service
+    networks:
+      - skillpulse-network
+
+  # --- Prometheus ---
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: skillpulse-prometheus
+    volumes:
+      - ./monitor/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    ports:
+      - "9090:9090"
+    networks:
+      - skillpulse-network
+
+  # --- Grafana ---
+  grafana:
+    image: grafana/grafana:latest
+    container_name: skillpulse-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+    networks:
+      - skillpulse-network
+    depends_on:
+      - prometheus
 
 volumes:
+  prometheus-data:
+  grafana-data:
   mysql_data:
+
+networks:
+  skillpulse-network:
+    driver: bridge
