@@ -1,4 +1,4 @@
-name: "SKILLPULSE Non-Prod EC2"
+name: "SKILLPULSE Non-Prod CD"
 
 on:
   workflow_call:
@@ -8,7 +8,7 @@ jobs:
     name: "Non-Prod Infra"
     runs-on: ubuntu-latest
     steps:
-      - name: Build Stage Infra
+      - name: Deploy on Non-Prod
         run: |
          echo "Building Stage Infra for Testing"
          echo "Non-Prod Infra Created Successfully"

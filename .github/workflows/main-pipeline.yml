@@ -7,13 +7,6 @@ on:
   pull_request:
     branches: [main]
 
-  workflow_dispatch:
-    inputs:
-      cleanup:
-        description: "Run Infra Cleanup Job"
-        required: true
-        default: "false"
-
 jobs:
   code-stage:
     if: github.event_name != 'workflow_dispatch'
@@ -40,16 +33,16 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
-  build-infra:
+  deploy-non-prod:
     needs: test-stage
     if: github.event_name != 'workflow_dispatch'
-    name: BUILD
+    name: DEPLOY
     uses: sachinthokal/SkillPulse_App/.github/workflows/non-prod-infra.yml@main
 
   deploy-prod:
     if: github.event_name != 'workflow_dispatch'
     name: DEPLOY
-    needs: build-infra
+    needs: deploy-non-prod
     uses: sachinthokal/SkillPulse_App/.github/workflows/cd.yml@main
     secrets:
       EC2_HOST: ${{ secrets.EC2_HOST }}
